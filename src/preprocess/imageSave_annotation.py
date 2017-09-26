@@ -202,7 +202,7 @@ def preprocess(filename_svg, filename_image, dir_name, base_name):
 					  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
 	row_start_index += STRIDE
 
-	print str(base_name)+"                done"
+	print(str(base_name)+"                done")
 
 
 def add_jitter(index):
@@ -297,7 +297,7 @@ def preprocess_non_cancer(filename_image, dir_name, base_name):
 	single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
 					  base_name, 2)
 	row_start_index += STRIDE
-	print str(base_name)+"                done"
+	print(str(base_name)+"                done")
 
 
 if __name__ == "__main__":
