@@ -14,11 +14,11 @@ pool = multiprocessing.Pool()
 
 
 for non_cancer in non_cancers:
-    print non_cancer
+    print(non_cancer)
     base = pattern.match(non_cancer).group(1)
     image_name = non_cancer
     pool.apply_async(preprocess_non_cancer, (image_name, dir_name, base, ))
 
 pool.close()
 pool.join()
-print "done"
+print("done")
