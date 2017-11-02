@@ -25,14 +25,13 @@ if (TOTAL_SIZE - CENTER_SIZE) % 2 != 0:
 
 
 def flood_fill(test_array, h_max=CANCER_COLOR):
-
-	input_array = np.copy(test_array) 
+	input_array = np.copy(test_array)
 	el = sp.ndimage.generate_binary_structure(2, 2).astype(np.int)
 	inside_mask = sp.ndimage.binary_erosion(~np.isnan(input_array), structure=el)
 	output_array = np.copy(input_array)
 	output_array[inside_mask] = h_max
 	output_old_array = np.copy(input_array)
-	output_old_array.fill(0)   
+	output_old_array.fill(0)
 	el = sp.ndimage.generate_binary_structure(2, 1).astype(np.int)
 	while not np.array_equal(output_old_array, output_array):
 		output_old_array = np.copy(output_array)
@@ -46,7 +45,7 @@ def perturb(image, annotation, index, dir_name, filename_image, dir_label_annota
 	img = tf.image.random_hue(img, max_delta=0.04)
 	img = tf.image.random_contrast(img, lower=0, upper=0.75)
 	config = tf.ConfigProto(allow_soft_placement=True,
-							log_device_placement=False)
+	                        log_device_placement=False)
 	config.gpu_options.allow_growth = True
 	with tf.Session(config=config) as sess:
 		img_val = sess.run(img)
@@ -57,8 +56,7 @@ def perturb(image, annotation, index, dir_name, filename_image, dir_label_annota
 
 
 def augmentation(crop_image, dir_name, filename_image, crop_image_annotation, crop_image_name_annotation,
-				 dir_label_annotation):
-
+                 dir_label_annotation):
 	# center = (CENTER_SIZE / 2 - 0.5, CENTER_SIZE / 2 - 0.5)
 	images = []
 	annotations = []
@@ -110,11 +108,13 @@ def augmentation(crop_image, dir_name, filename_image, crop_image_annotation, cr
 		# annot = annotations[i].copy()
 		# annot[annot == 1] = 255
 		# cv2.imwrite(dir_label_annotation + crop_image_name_annotation[:-15] + '-' + str(i + 1) + '-annotation.png', annot)
-		# perturb(images[i], annotations[i], i + 1, dir_name, filename_image, dir_label_annotation, crop_image_name_annotation)
+		# perturb(images[i], annotations[i], i + 1, dir_name, filename_image, dir_label_annotation,
+		#         crop_image_name_annotation)
+		perturb(images[i], None, i + 1, dir_name, filename_image, dir_label_annotation,
+		        crop_image_name_annotation)
 
 
 def preprocess(filename_svg, filename_image, dir_name, base_name):
-
 	s = ''
 	with open(filename_svg) as f:
 		for line in f.readlines():
@@ -159,8 +159,8 @@ def preprocess(filename_svg, filename_image, dir_name, base_name):
 	dir_name_label_1 = dir_name + '1' + '/'
 	dir_name_label_0 = dir_name + '0' + '/'
 
-	dir_annotation_1 = dir_name[:-1]+'_annotation/' + '1' + '/'
-	dir_annotation_0 = dir_name[:-1]+'_annotation/' + '0' + '/'
+	dir_annotation_1 = dir_name[:-1] + '_annotation/' + '1' + '/'
+	dir_annotation_0 = dir_name[:-1] + '_annotation/' + '0' + '/'
 
 	if not os.path.exists(dir_name):
 		os.mkdir(dir_name)
@@ -181,12 +181,12 @@ def preprocess(filename_svg, filename_image, dir_name, base_name):
 		col_start_index = 0
 		while col_start_index + TOTAL_SIZE < canvas_size:
 			single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-							  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
+			                  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
 			col_start_index += STRIDE
 
 		col_start_index = canvas_size - TOTAL_SIZE
 		single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-						  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
+		                  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
 		row_start_index += STRIDE
 		row_number += 1
 
@@ -194,12 +194,12 @@ def preprocess(filename_svg, filename_image, dir_name, base_name):
 	col_start_index = 0
 	while col_start_index + TOTAL_SIZE < canvas_size:
 		single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-						  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
+		                  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
 		col_start_index += STRIDE
 
 	col_start_index = canvas_size - TOTAL_SIZE
 	single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-					  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
+	                  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
 	row_start_index += STRIDE
 
 	print(str(base_name) + "                done")
@@ -218,23 +218,23 @@ def add_jitter(index):
 
 
 def single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-					  base_name, c_type, sum_shelter=None, dir_name_label_1=None, dir_annotation_1=None):
+                      base_name, c_type, sum_shelter=None, dir_name_label_1=None, dir_annotation_1=None):
 	# c_type=1 for cancer image and c_type=2 for non_cancer
 	# row_start_index = add_jitter(row_start_index)
 	# col_start_index = add_jitter(col_start_index)
-	row_start_index = 0
-	col_start_index = 0
+	row_start_index = row_start_index
+	col_start_index = col_start_index
 
 	crop_image = image[row_start_index:(row_start_index + TOTAL_SIZE),
-					   col_start_index:(col_start_index + TOTAL_SIZE)]
+	             col_start_index:(col_start_index + TOTAL_SIZE)]
 	crop_image_annotation = canvas[row_start_index:(row_start_index + TOTAL_SIZE),
-								   col_start_index:(col_start_index + TOTAL_SIZE)]
+	                        col_start_index:(col_start_index + TOTAL_SIZE)]
 	if c_type == 2:
 		dir_name_label = dir_name_label_0
 		dir_label_annotation = dir_annotation_0
 	else:
 		if np.sum(canvas[(row_start_index + ITEM_ADD):(row_start_index + ITEM_ADD + CENTER_SIZE),
-						 (col_start_index + ITEM_ADD):(col_start_index + ITEM_ADD + CENTER_SIZE)]) > sum_shelter:
+		          (col_start_index + ITEM_ADD):(col_start_index + ITEM_ADD + CENTER_SIZE)]) > sum_shelter:
 			dir_name_label = dir_name_label_1
 			dir_label_annotation = dir_annotation_1
 		else:
@@ -243,13 +243,13 @@ def single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_
 
 	crop_image_name = str(base_name) + '-' + str(row_start_index) + '-' + str(col_start_index) + '.png'
 	crop_image_name_annotation = str(base_name) + '-' + str(row_start_index) + '-' + str(col_start_index) \
-												+ '-annotation' + '.png'
+	                             + '-annotation' + '.png'
 	cv2.imwrite(dir_name_label + crop_image_name, crop_image)
 	# crop_image_annotation[crop_image_name_annotation == 1] = 255
 	# cv2.imwrite(dir_label_annotation + crop_image_name_annotation, crop_image_annotation)
 	if c_type == 1 and dir_name_label == dir_name_label_1:
 		augmentation(crop_image, dir_name_label, crop_image_name, crop_image_annotation,
-					 crop_image_name_annotation, dir_label_annotation)
+		             crop_image_name_annotation, dir_label_annotation)
 
 
 def preprocess_non_cancer(filename_image, dir_name, base_name):
@@ -258,13 +258,13 @@ def preprocess_non_cancer(filename_image, dir_name, base_name):
 	canvas.fill(NO_CANCER_COLOR)
 	M = np.float32([[1, 0, ITEM_ADD], [0, 1, ITEM_ADD]])
 	canvas = cv2.warpAffine(canvas, M, (canvas_size, canvas_size))
-	
+
 	M = np.float32([[1, 0, ITEM_ADD], [0, 1, ITEM_ADD]])
 	image = cv2.imread(filename_image, 1)
 	image = cv2.warpAffine(image, M, (canvas_size, canvas_size))
 
-	dir_name_label_0 = dir_name+'0'+'/'
-	dir_annotation_0 = dir_name[:-1]+'_annotation/'+'0'+'/'
+	dir_name_label_0 = dir_name + '0' + '/'
+	dir_annotation_0 = dir_name[:-1] + '_annotation/' + '0' + '/'
 
 	if not os.path.exists(dir_name):
 		os.mkdir(dir_name)
@@ -281,11 +281,11 @@ def preprocess_non_cancer(filename_image, dir_name, base_name):
 		col_start_index = 0
 		while col_start_index + TOTAL_SIZE < canvas_size:
 			single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-							  base_name, 2)
+			                  base_name, 2)
 			col_start_index += STRIDE
 		col_start_index = canvas_size - TOTAL_SIZE
 		single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-						  base_name, 2)
+		                  base_name, 2)
 		row_start_index += STRIDE
 		row_number += 1
 
@@ -293,19 +293,19 @@ def preprocess_non_cancer(filename_image, dir_name, base_name):
 	col_start_index = 0
 	while col_start_index + TOTAL_SIZE < canvas_size:
 		single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-						  base_name, 2)
+		                  base_name, 2)
 		col_start_index += STRIDE
 	col_start_index = canvas_size - TOTAL_SIZE
 	single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-					  base_name, 2)
+	                  base_name, 2)
 	row_start_index += STRIDE
 	print(str(base_name) + "                done")
 
 
 if __name__ == "__main__":
-	filename_svg = '../data/label/2017-06-09_18.08.16.ndpi.16.14788_15256.2048x2048.svg'
-	filename_image = '../data/cancer/2017-06-09_18.08.16.ndpi.16.14788_15256.2048x2048.tiff'
+	filename_svg = '../data/raw_input/labels/2017-06-09_18.08.16.ndpi.16.14788_15256.2048x2048.svg'
+	filename_image = '../data/raw_input/cancer/cancer_subset00/2017-06-09_18.08.16.ndpi.16.14788_15256.2048x2048.tiff'
 	dir_name = '../data/img'
 	non_cancer_image = "non_cancer.tiff"
 	preprocess(filename_svg, filename_image, dir_name, '2017-06-09_18.08.16.ndpi.16.14788_15256.2048x2048')
-	preprocess_non_cancer(non_cancer_image, dir_name, 'qwertyui')
+	# preprocess_non_cancer(non_cancer_image, dir_name, 'qwertyui')
