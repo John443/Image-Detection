@@ -4,8 +4,8 @@ import re
 import multiprocessing
 from imageSave_annotation import preprocess
 
-dir_svg = '../data/label'
-dir_cancer = '../data/cancer'
+dir_svg = '../../data/label'
+dir_cancer = '../../data/cancer'
 dir_non_cancer = 'non_cancer'
 labels = glob.glob(dir_svg + '/*.svg')
 # labels = os.listdir(dir_svg)

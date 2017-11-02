@@ -137,9 +137,9 @@ def preprocess(filename_svg, filename_image, dir_name, base_name):
 
 	for result in results:
 		result = result[1:-2].split(' ')
-		for i in range(len(result)-1):
+		for i in range(len(result) - 1):
 			current_points = [int(item) for item in result[i].split(',')]
-			next_points = [int(item) for item in result[i+1].split(',')]
+			next_points = [int(item) for item in result[i + 1].split(',')]
 			cv2.line(canvas, (current_points[0], current_points[1]), (next_points[0], next_points[1]), CANCER_COLOR, 3)
 
 	M = np.float32([[1, 0, ITEM_ADD], [0, 1, ITEM_ADD]])
@@ -164,8 +164,8 @@ def preprocess(filename_svg, filename_image, dir_name, base_name):
 
 	if not os.path.exists(dir_name):
 		os.mkdir(dir_name)
-	if not os.path.exists(dir_name[:-1]+'_annotation/'):
-		os.mkdir(dir_name[:-1]+'_annotation/')
+	if not os.path.exists(dir_name[:-1] + '_annotation/'):
+		os.mkdir(dir_name[:-1] + '_annotation/')
 	if not os.path.exists(dir_name_label_0):
 		os.mkdir(dir_name_label_0)
 	if not os.path.exists(dir_name_label_1):
@@ -202,7 +202,7 @@ def preprocess(filename_svg, filename_image, dir_name, base_name):
 					  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
 	row_start_index += STRIDE
 
-	print(str(base_name)+"                done")
+	print(str(base_name) + "                done")
 
 
 def add_jitter(index):
@@ -267,7 +267,7 @@ def preprocess_non_cancer(filename_image, dir_name, base_name):
 	if not os.path.exists(dir_name):
 		os.mkdir(dir_name)
 	if not os.path.exists(dir_name[:-1]+'_annotation/'):
-		os.mkdir(dir_name[:-1]+'_annotation/')
+		os.mkdir(dir_name[:-1] + '_annotation/')
 	if not os.path.exists(dir_name_label_0):
 		os.mkdir(dir_name_label_0)
 	if not os.path.exists(dir_annotation_0):
@@ -297,7 +297,7 @@ def preprocess_non_cancer(filename_image, dir_name, base_name):
 	single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
 					  base_name, 2)
 	row_start_index += STRIDE
-	print(str(base_name)+"                done")
+	print(str(base_name) + "                done")
 
 
 if __name__ == "__main__":
