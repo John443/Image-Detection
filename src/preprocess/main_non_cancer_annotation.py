@@ -9,7 +9,7 @@ dir_non_cancer = '../../data/non_cancer'
 non_cancers = glob.glob(dir_non_cancer+'/*.tiff')
 pattern = dir_non_cancer+'/(.*)?.tiff'
 pattern = re.compile(pattern)
-dir_name = '/disk1/15_15_128_image/'
+dir_name = '../../data/image/'
 pool = multiprocessing.Pool()
 
 

@@ -11,7 +11,7 @@ labels = glob.glob(dir_svg + '/*.svg')
 # labels = os.listdir(dir_svg)
 pattern = dir_svg + '/(.*)?.svg'
 pattern = re.compile(pattern)
-dir_name = '../data/img/'
+dir_name = '../../data/image/'
 pool = multiprocessing.Pool()
 
 
