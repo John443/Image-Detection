@@ -222,8 +222,6 @@ def single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_
 	# c_type=1 for cancer image and c_type=2 for non_cancer
 	# row_start_index = add_jitter(row_start_index)
 	# col_start_index = add_jitter(col_start_index)
-	row_start_index = row_start_index
-	col_start_index = col_start_index
 
 	crop_image = image[row_start_index:(row_start_index + TOTAL_SIZE),
 	             col_start_index:(col_start_index + TOTAL_SIZE)]
@@ -302,10 +300,10 @@ def preprocess_non_cancer(filename_image, dir_name, base_name):
 	print(str(base_name) + "                done")
 
 
-if __name__ == "__main__":
-	filename_svg = '../data/raw_input/labels/2017-06-09_18.08.16.ndpi.16.14788_15256.2048x2048.svg'
-	filename_image = '../data/raw_input/cancer/cancer_subset00/2017-06-09_18.08.16.ndpi.16.14788_15256.2048x2048.tiff'
-	dir_name = '../data/img'
-	non_cancer_image = "non_cancer.tiff"
-	preprocess(filename_svg, filename_image, dir_name, '2017-06-09_18.08.16.ndpi.16.14788_15256.2048x2048')
-	# preprocess_non_cancer(non_cancer_image, dir_name, 'qwertyui')
+# if __name__ == "__main__":
+# 	filename_svg = '../data/raw_input/labels/2017-06-09_18.08.16.ndpi.16.14788_15256.2048x2048.svg'
+# 	filename_image = '../data/raw_input/cancer/cancer_subset00/2017-06-09_18.08.16.ndpi.16.14788_15256.2048x2048.tiff'
+# 	dir_name = '../data/img'
+# 	non_cancer_image = "non_cancer.tiff"
+# 	preprocess(filename_svg, filename_image, dir_name, '2017-06-09_18.08.16.ndpi.16.14788_15256.2048x2048')
+# 	preprocess_non_cancer(non_cancer_image, dir_name, 'qwertyui')

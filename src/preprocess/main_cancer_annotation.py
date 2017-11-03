@@ -17,8 +17,6 @@ pool = multiprocessing.Pool()
 
 for label_name in labels:
 	print(label_name)
-	if label_name < "2017-06-13_14.46.49.ndpi.16.27271_20873.2048x2048":
-		continue
 	base = pattern.match(label_name).group(1)
 	image_name = dir_cancer + '/' + base + '.tiff'
 	pool.apply_async(preprocess, (label_name, image_name, dir_name, base, ))
