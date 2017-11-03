@@ -12,6 +12,7 @@
 * 图像增强：对 tumor 图像，进行 4 次 rotate 操作，得到 4 个图像；对 4 个图像再做 left-to-right-flip 操作，得到 4 个图像；对以上 8 个图像做 perturb 操作，再得到 8 个图像。同时，裁剪图像的时候做 jitter 操作，增加随机性。
 * perturb 操作：利用 tensorflow 的 image 库调整图像的brightness、saturation、hue 和 contrast 参数，其中max_delta分别为 64/255、0.25、0.04 和 0.75。
 * jitter 操作：对图像裁剪的起点坐标增加一个 0～8 的随机 offset。
+* 用pip安装multiprocess库有助于提高服务器上的运行效率！！！
 * Source Code:
 
     ```shell
