@@ -8,12 +8,6 @@ import os
 import random
 import tensorflow as tf
 
-# a = np.random.random((500,500,3))
-# misc.imsave('test.png',a)
-# b = misc.imread('test.png')
-# print type(b)
-# print b
-# print "done"
 
 CENTER_SIZE = 128
 TOTAL_SIZE = 299
@@ -110,8 +104,6 @@ def augmentation(crop_image, dir_name, filename_image, crop_image_annotation, cr
 		# cv2.imwrite(dir_label_annotation + crop_image_name_annotation[:-15] + '-' + str(i + 1) + '-annotation.png', annot)
 		# perturb(images[i], annotations[i], i + 1, dir_name, filename_image, dir_label_annotation,
 		#         crop_image_name_annotation)
-		perturb(images[i], None, i + 1, dir_name, filename_image, dir_label_annotation,
-		        crop_image_name_annotation)
 
 
 def preprocess(filename_svg, filename_image, dir_name, base_name):
