@@ -317,10 +317,9 @@ def train(dataset):
 		# Start running operations on the Graph. allow_soft_placement must be set to
 		# True to build towers on GPU, as some of the ops do not have GPU
 		# implementations.
-		gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.7)
 		config = tf.ConfigProto(allow_soft_placement=True,
-		                        log_device_placement=False,
-		                        gpu_options=gpu_options)
+		                        log_device_placement=False)
+		config.gpu_options.allow_growth = True
 		sess = tf.Session(config=config)
 		sess.run(init)
 
