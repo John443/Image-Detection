@@ -237,9 +237,11 @@ def single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_
 	cv2.imwrite(dir_name_label + crop_image_name, crop_image)
 	# crop_image_annotation[crop_image_name_annotation == 1] = 255
 	# cv2.imwrite(dir_label_annotation + crop_image_name_annotation, crop_image_annotation)
-	if c_type == 1 and dir_name_label == dir_name_label_1:
-		augmentation(crop_image, dir_name_label, crop_image_name, crop_image_annotation,
-		             crop_image_name_annotation, dir_label_annotation)
+	# if c_type == 1 and dir_name_label == dir_name_label_1:
+	# 	augmentation(crop_image, dir_name_label, crop_image_name, crop_image_annotation,
+	# 	             crop_image_name_annotation, dir_label_annotation)
+	augmentation(crop_image, dir_name_label, crop_image_name, crop_image_annotation,
+	             crop_image_name_annotation, dir_label_annotation)
 
 
 def preprocess_non_cancer(filename_image, dir_name, base_name):
