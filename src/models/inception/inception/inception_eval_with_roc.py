@@ -180,7 +180,7 @@ def evaluate(dataset):
 
 		# Build a Graph that computes the logits predictions from the
 		# inference model.
-		logits, _, test = inception.inference(images, num_classes)
+		logits, _ = inception.inference(images, num_classes)
 
 		# Calculate predictions.
 		top_1_op = tf.nn.in_top_k(logits, labels, 1)
