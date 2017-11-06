@@ -106,7 +106,7 @@ def _eval_once(saver, summary_writer, top_1_op, top_5_op, logit_op, labels, summ
 			step = 0
 			tp = 0
 			p = 0
-			fp = 0
+			tn = 0
 			n = 0
 			colors = []
 
@@ -127,7 +127,7 @@ def _eval_once(saver, summary_writer, top_1_op, top_5_op, logit_op, labels, summ
 					elif real[i] == 1:
 						n += 1
 						if real[i] == pred[i]:
-							fp += 1
+							tn += 1
 				step += 1
 				if step % 20 == 0:
 					duration = time.time() - start_time
@@ -144,8 +144,10 @@ def _eval_once(saver, summary_writer, top_1_op, top_5_op, logit_op, labels, summ
 			print('%s: precision @ 1 = %.4f recall @ 5 = %.4f [%d examples]' %
 			      (datetime.now(), precision_at_1, recall_at_5, total_sample_count))
 
-			tpr = 1.0 * tp / p
-			fpr = 1.0 * fp / n
+			fp = p - tp
+			fn = n - tn
+			tpr = 1.0 * tp / (tp + fn)
+			fpr = 1.0 * fp / (fp + tn)
 			print('%s: TPR = %.4f FPR = %.4f [%d examples]' %
 			      (datetime.now(), tpr, fpr, total_sample_count))
 
@@ -178,7 +180,7 @@ def evaluate(dataset):
 
 		# Build a Graph that computes the logits predictions from the
 		# inference model.
-		logits, _, test = inception.inference(images, num_classes)
+		logits, _ = inception.inference(images, num_classes)
 
 		# Calculate predictions.
 		top_1_op = tf.nn.in_top_k(logits, labels, 1)
