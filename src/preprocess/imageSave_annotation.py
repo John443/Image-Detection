@@ -64,13 +64,13 @@ def augmentation(crop_image, dir_name, filename_image, crop_image_annotation, cr
 
 	image2 = cv2.flip(image1, 1)
 	# annotation2 = cv2.flip(annotation1, 1)
-	if ctype == 1:
-		images.append(image2)
+	images.append(image2)
 	# annotations.append(annotation2)
 
 	image3 = cv2.warpAffine(image1, M1, (TOTAL_SIZE, TOTAL_SIZE))
 	# annotation3 = cv2.warpAffine(annotation1, M1, (TOTAL_SIZE, TOTAL_SIZE))
-	images.append(image3)
+	if ctype == 1:
+		images.append(image3)
 	# annotations.append(annotation3)
 
 	image4 = cv2.flip(image3, 1)
@@ -251,7 +251,7 @@ def single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_
 	# 	augmentation(crop_image, dir_name_label, crop_image_name, crop_image_annotation,
 	# 	             crop_image_name_annotation, dir_label_annotation)
 	augmentation(crop_image, dir_name_label, crop_image_name, crop_image_annotation,
-	             crop_image_name_annotation, dir_label_annotation, c_type)
+	             crop_image_name_annotation, dir_label_annotation, img_type)
 
 
 def preprocess_non_cancer(filename_image, dir_name, base_name):
