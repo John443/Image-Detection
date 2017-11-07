@@ -50,7 +50,7 @@ def perturb(image, annotation, index, dir_name, filename_image, dir_label_annota
 
 
 def augmentation(crop_image, dir_name, filename_image, crop_image_annotation, crop_image_name_annotation,
-                 dir_label_annotation):
+                 dir_label_annotation, ctype):
 	# center = (CENTER_SIZE / 2 - 0.5, CENTER_SIZE / 2 - 0.5)
 	images = []
 	annotations = []
@@ -64,7 +64,8 @@ def augmentation(crop_image, dir_name, filename_image, crop_image_annotation, cr
 
 	image2 = cv2.flip(image1, 1)
 	# annotation2 = cv2.flip(annotation1, 1)
-	images.append(image2)
+	if ctype == 1:
+		images.append(image2)
 	# annotations.append(annotation2)
 
 	image3 = cv2.warpAffine(image1, M1, (TOTAL_SIZE, TOTAL_SIZE))
@@ -74,27 +75,32 @@ def augmentation(crop_image, dir_name, filename_image, crop_image_annotation, cr
 
 	image4 = cv2.flip(image3, 1)
 	# annotation4 = cv2.flip(annotation3, 1)
-	images.append(image4)
+	if ctype == 1:
+		images.append(image4)
 	# annotations.append(annotation4)
 
 	image5 = cv2.warpAffine(image3, M1, (TOTAL_SIZE, TOTAL_SIZE))
 	# annotation5 = cv2.warpAffine(annotation3, M1, (TOTAL_SIZE, TOTAL_SIZE))
-	images.append(image5)
+	if ctype == 1:
+		images.append(image5)
 	# annotations.append(annotation5)
 
 	image6 = cv2.flip(image5, 1)
 	# annotation6 = cv2.flip(annotation5, 1)
-	images.append(image6)
+	if ctype == 1:
+		images.append(image6)
 	# annotations.append(annotation6)
 
 	image7 = cv2.warpAffine(image5, M1, (TOTAL_SIZE, TOTAL_SIZE))
 	# annotation7 = cv2.warpAffine(annotation5, M1, (TOTAL_SIZE, TOTAL_SIZE))
-	images.append(image7)
+	if ctype == 1:
+		images.append(image7)
 	# annotations.append(annotation7)
 
 	image8 = cv2.flip(image7, 1)
 	# annotation8 = cv2.flip(annotation7, 1)
-	images.append(image8)
+	if ctype == 1:
+		images.append(image8)
 	# annotations.append(annotation8)
 
 	for i in range(len(images)):
@@ -214,6 +220,7 @@ def single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_
 	# c_type=1 for cancer image and c_type=2 for non_cancer
 	# row_start_index = add_jitter(row_start_index)
 	# col_start_index = add_jitter(col_start_index)
+	img_type = 1
 
 	crop_image = image[row_start_index:(row_start_index + TOTAL_SIZE),
 	             col_start_index:(col_start_index + TOTAL_SIZE)]
@@ -222,26 +229,29 @@ def single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_
 	if c_type == 2:
 		dir_name_label = dir_name_label_0
 		dir_label_annotation = dir_annotation_0
+		img_type = 2
 	else:
 		if np.sum(canvas[(row_start_index + ITEM_ADD):(row_start_index + ITEM_ADD + CENTER_SIZE),
 		          (col_start_index + ITEM_ADD):(col_start_index + ITEM_ADD + CENTER_SIZE)]) > sum_shelter:
 			dir_name_label = dir_name_label_1
 			dir_label_annotation = dir_annotation_1
+			img_type = 1
 		else:
 			dir_name_label = dir_name_label_0
 			dir_label_annotation = dir_annotation_0
+			img_type = 2
 
 	crop_image_name = str(base_name) + '-' + str(row_start_index) + '-' + str(col_start_index) + '.png'
 	crop_image_name_annotation = str(base_name) + '-' + str(row_start_index) + '-' + str(col_start_index) \
 	                             + '-annotation' + '.png'
-	cv2.imwrite(dir_name_label + crop_image_name, crop_image)
+	# cv2.imwrite(dir_name_label + crop_image_name, crop_image)
 	# crop_image_annotation[crop_image_name_annotation == 1] = 255
 	# cv2.imwrite(dir_label_annotation + crop_image_name_annotation, crop_image_annotation)
 	# if c_type == 1 and dir_name_label == dir_name_label_1:
 	# 	augmentation(crop_image, dir_name_label, crop_image_name, crop_image_annotation,
 	# 	             crop_image_name_annotation, dir_label_annotation)
 	augmentation(crop_image, dir_name_label, crop_image_name, crop_image_annotation,
-	             crop_image_name_annotation, dir_label_annotation)
+	             crop_image_name_annotation, dir_label_annotation, c_type)
 
 
 def preprocess_non_cancer(filename_image, dir_name, base_name):
