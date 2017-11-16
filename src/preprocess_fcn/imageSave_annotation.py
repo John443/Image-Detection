@@ -35,57 +35,57 @@ def flood_fill(test_array, h_max=CANCER_COLOR):
 
 def augmentation(crop_image, dir_name, filename_image, crop_image_annotation, crop_image_name_annotation,
                  dir_label_annotation, ctype):
-	# center = (CENTER_SIZE / 2 - 0.5, CENTER_SIZE / 2 - 0.5)
+	center = (CENTER_SIZE / 2 - 0.5, CENTER_SIZE / 2 - 0.5)
 	images = []
 	annotations = []
 	center = (TOTAL_SIZE / 2, TOTAL_SIZE / 2)
 	M1 = cv2.getRotationMatrix2D(center, 90, 1)
 
 	image1 = cv2.warpAffine(crop_image, M1, (TOTAL_SIZE, TOTAL_SIZE))
-	# annotation1 = cv2.warpAffine(crop_image_annotation, M1, (TOTAL_SIZE, TOTAL_SIZE))
+	annotation1 = cv2.warpAffine(crop_image_annotation, M1, (TOTAL_SIZE, TOTAL_SIZE))
 	images.append(image1)
-	# annotations.append(annotation1)
+	annotations.append(annotation1)
 
 	image2 = cv2.flip(image1, 1)
-	# annotation2 = cv2.flip(annotation1, 1)
+	annotation2 = cv2.flip(annotation1, 1)
 	images.append(image2)
-	# annotations.append(annotation2)
+	annotations.append(annotation2)
 
 	image3 = cv2.warpAffine(image1, M1, (TOTAL_SIZE, TOTAL_SIZE))
-	# annotation3 = cv2.warpAffine(annotation1, M1, (TOTAL_SIZE, TOTAL_SIZE))
+	annotation3 = cv2.warpAffine(annotation1, M1, (TOTAL_SIZE, TOTAL_SIZE))
 	if ctype == 1:
 		images.append(image3)
-	# annotations.append(annotation3)
+		annotations.append(annotation3)
 
 	image4 = cv2.flip(image3, 1)
-	# annotation4 = cv2.flip(annotation3, 1)
+	annotation4 = cv2.flip(annotation3, 1)
 	if ctype == 1:
 		images.append(image4)
-	# annotations.append(annotation4)
+		annotations.append(annotation4)
 
 	image5 = cv2.warpAffine(image3, M1, (TOTAL_SIZE, TOTAL_SIZE))
-	# annotation5 = cv2.warpAffine(annotation3, M1, (TOTAL_SIZE, TOTAL_SIZE))
+	annotation5 = cv2.warpAffine(annotation3, M1, (TOTAL_SIZE, TOTAL_SIZE))
 	if ctype == 1:
 		images.append(image5)
-	# annotations.append(annotation5)
+		annotations.append(annotation5)
 
 	image6 = cv2.flip(image5, 1)
-	# annotation6 = cv2.flip(annotation5, 1)
+	annotation6 = cv2.flip(annotation5, 1)
 	if ctype == 1:
 		images.append(image6)
-	# annotations.append(annotation6)
+		annotations.append(annotation6)
 
 	image7 = cv2.warpAffine(image5, M1, (TOTAL_SIZE, TOTAL_SIZE))
-	# annotation7 = cv2.warpAffine(annotation5, M1, (TOTAL_SIZE, TOTAL_SIZE))
+	annotation7 = cv2.warpAffine(annotation5, M1, (TOTAL_SIZE, TOTAL_SIZE))
 	if ctype == 1:
 		images.append(image7)
-	# annotations.append(annotation7)
+		annotations.append(annotation7)
 
 	image8 = cv2.flip(image7, 1)
-	# annotation8 = cv2.flip(annotation7, 1)
+	annotation8 = cv2.flip(annotation7, 1)
 	if ctype == 1:
 		images.append(image8)
-	# annotations.append(annotation8)
+		annotations.append(annotation8)
 
 	for i in range(len(images)):
 		cv2.imwrite(dir_name + filename_image[:-4] + '-' + str(i + 1) + '.png', images[i])
