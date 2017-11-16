@@ -76,27 +76,6 @@ def vgg_19(inputs,
            spatial_squeeze=True,
            scope='vgg_19',
            fc_conv_padding='VALID'):
-	"""Oxford Net VGG 19-Layers version E Example.
-		Note: All the fully_connected layers have been transformed to conv2d layers.
-		To use in classification mode, resize input to 224x224.
-		Args:
-			inputs: a tensor of size [batch_size, height, width, channels].
-			num_classes: number of predicted classes.
-			is_training: whether or not the model is being trained.
-			dropout_keep_prob: the probability that activations are kept in the dropout
-				layers during training.
-			spatial_squeeze: whether or not should squeeze the spatial dimensions of the
-				outputs. Useful to remove unnecessary dimensions for classification.
-			scope: Optional scope for the variables.
-			fc_conv_padding: the type of padding to use for the fully connected layer
-				that is implemented as a convolutional layer. Use 'SAME' padding if you
-				are applying the network in a fully convolutional manner and want to
-				get a prediction map downsampled by a factor of 32 as an output.
-				Otherwise, the output prediction map will be (input / 32) - 6 in case of
-				'VALID' padding.
-		Returns:
-			the last op containing the log predictions and end_points dict.
-	"""
 	with tf.variable_scope(scope, 'vgg_19', [inputs]) as sc:
 		end_points_collection = sc.name + '_end_points'
 		# Collect outputs for conv2d, fully_connected and max_pool2d.
