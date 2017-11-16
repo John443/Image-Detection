@@ -131,20 +131,6 @@ def vgg_19(inputs,
 			return net, end_points
 
 
-def inference_vgg(image, keep_prob):
-	"""
-		Semantic segmentation network definition
-		:param image: input image. Should have values in range 0-255
-		:param keep_prob:
-		:return:
-		"""
-	print("setting up vgg ...")
-
-	pred, _ = vgg_19(image, num_classes=NUM_OF_CLASSESS, dropout_keep_prob=keep_prob, is_training=True)
-
-	return pred
-
-
 def inference(image, keep_prob):
 	"""
 	Semantic segmentation network definition
