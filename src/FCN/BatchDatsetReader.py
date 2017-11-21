@@ -3,7 +3,6 @@ Code ideas from https://github.com/Newmu/dcgan and tensorflow mnist dataset read
 """
 import numpy as np
 import scipy.misc as misc
-import FCN
 import tensorflow as tf
 
 
