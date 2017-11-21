@@ -404,4 +404,5 @@ def main(argv=None):
             f.write("total_acc:         " + str(total_acc) + '\n')
 
 
-
+if __name__ == "__main__":
+    tf.app.run()
