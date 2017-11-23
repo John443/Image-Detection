@@ -70,7 +70,7 @@ IMAGE_SIZE = 224
 
 
 def vgg_19(inputs,
-           num_classes=1000,
+           num_classes=2,
            is_training=True,
            dropout_keep_prob=0.5,
            spatial_squeeze=True,
@@ -92,16 +92,16 @@ def vgg_19(inputs,
 			net = slim.repeat(net, 4, slim.conv2d, 512, [3, 3], scope='conv5')
 			net = slim.max_pool2d(net, [2, 2], scope='pool5')
 			# Use conv2d instead of fully_connected layers.
-			net = slim.conv2d(net, 4096, [7, 7], padding=fc_conv_padding, scope='fc6')
-			net = slim.dropout(net, dropout_keep_prob, is_training=is_training,
-			                   scope='dropout6')
-			net = slim.conv2d(net, 4096, [1, 1], scope='fc7')
-			net = slim.dropout(net, dropout_keep_prob, is_training=is_training,
-			                   scope='dropout7')
-			net = slim.conv2d(net, num_classes, [1, 1],
-			                  activation_fn=None,
-			                  normalizer_fn=None,
-			                  scope='fc8')
+			# net = slim.conv2d(net, 4096, [7, 7], padding=fc_conv_padding, scope='fc6')
+			# net = slim.dropout(net, dropout_keep_prob, is_training=is_training,
+			#                    scope='dropout6')
+			# net = slim.conv2d(net, 4096, [1, 1], scope='fc7')
+			# net = slim.dropout(net, dropout_keep_prob, is_training=is_training,
+			#                    scope='dropout7')
+			# net = slim.conv2d(net, num_classes, [1, 1],
+			#                   activation_fn=None,
+			#                   normalizer_fn=None,
+			#                   scope='fc8')
 			# Convert end_points_collection into a end_point dict.
 			end_points = slim.utils.convert_collection_to_dict(end_points_collection)
 			if spatial_squeeze:
@@ -194,29 +194,36 @@ def inference(image, keep_prob):
 	return tf.expand_dims(annotation_pred, dim=3), conv_t3
 
 
-def train(loss_val, var_list):
+def train(loss, var_list):
 	optimizer = tf.train.AdamOptimizer(FLAGS.learning_rate)
-	grads = optimizer.compute_gradients(loss_val, var_list=var_list)
+	# grads = optimizer.compute_gradients(loss_val, var_list=var_list)
 	# if FLAGS.debug:
 	# 	for grad, var in grads:
 	# 		utils.add_gradient_summary(grad, var)
-	return optimizer.apply_gradients(grads)
+	grads = optimizer.minimize(loss, var_list=var_list)
+	return grads
 
 
 def main(argv=None):
 	keep_probability = tf.placeholder(tf.float32, name="keep_probabilty")
 	image = tf.placeholder(tf.float32, shape=[None, IMAGE_SIZE, IMAGE_SIZE, 3], name="input_image")
-	annotation = tf.placeholder(tf.int32, shape=[None, IMAGE_SIZE, IMAGE_SIZE, 1], name="annotation")
+	annotation = tf.placeholder(tf.float32, shape=[None, IMAGE_SIZE, IMAGE_SIZE, 1], name="annotation")
 
 	pred_annotation, logits = inference(image, keep_probability)
 	tf.summary.image("input_image", image, max_outputs=2)
 	tf.summary.image("ground_truth", tf.cast(annotation, tf.uint8), max_outputs=2)
 	tf.summary.image("pred_annotation", tf.cast(pred_annotation, tf.uint8), max_outputs=2)
 
-	loss = tf.reduce_mean((tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits,
-	                                                                      labels=tf.squeeze(annotation,
-	                                                                                        squeeze_dims=[3]),
-	                                                                      name="entropy")))
+	# loss = tf.reduce_mean((tf.nn.sparse_softmax_cross_entropy_with_logits(
+	# 	logits=logits,
+	# 	labels=tf.squeeze(annotation, squeeze_dims=[3]),
+	# 	name="entropy"
+	# )))
+	loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
+		logits=tf.cast(tf.reshape(logits, (-1, NUM_OF_CLASSESS)), tf.float32),
+		labels=tf.reshape(annotation, (-1, NUM_OF_CLASSESS)),
+		name='entropy'
+	))
 	tf.summary.scalar("entropy", loss)
 
 	trainable_var = tf.trainable_variables()
@@ -281,8 +288,8 @@ def main(argv=None):
 				acc = float(sum_pred_annotation) / sum_annotation
 
 				print("Step: %d, Train_loss: %g, ACC: %f" % (itr, train_loss, acc))
-				with open(os.path.join(FLAGS.logs_dir, 'train_log.txt'), 'a') as f:
-					f.write("Step: %d, Train_loss: %g, ACC: %f" % (itr, train_loss, acc) + '\n')
+				# with open(os.path.join(FLAGS.logs_dir, 'train_log.txt'), 'a') as f:
+				# 	f.write("Step: %d, Train_loss: %g, ACC: %f" % (itr, train_loss, acc) + '\n')
 				summary_writer.add_summary(summary_str, itr)
 
 			if itr % 500 == 0:
@@ -307,9 +314,9 @@ def main(argv=None):
 							if valid_pred[index][i, j] == 1 and valid_annotations[index][i, j] == 1:
 								sum_pred_annotation += 1
 				acc = float(sum_pred_annotation) / sum_annotation
-				with open(os.path.join(FLAGS.logs_dir, 'train_log.txt'), 'a') as f:
-					f.write(
-						"%s ---> Validation_loss: %g     acc: %f" % (datetime.datetime.now(), valid_loss, acc) + '\n')
+				# with open(os.path.join(FLAGS.logs_dir, 'train_log.txt'), 'a') as f:
+				# 	f.write(
+				# 		"%s ---> Validation_loss: %g     acc: %f" % (datetime.datetime.now(), valid_loss, acc) + '\n')
 				print("%s ---> Validation_loss: %g" % (datetime.datetime.now(), valid_loss))
 				saver.save(sess, FLAGS.logs_dir + "model.ckpt", itr)
 
