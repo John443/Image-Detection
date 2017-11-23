@@ -110,7 +110,7 @@ def augmentation(crop_image, dir_name, filename_image, crop_image_annotation, cr
 	for i in range(len(images)):
 		cv2.imwrite(dir_name + filename_image[:-4] + '-' + str(i + 1) + '.png', images[i])
 		annot = annotations[i].copy()
-		annot[annot == 1] = 255
+		# annot[annot == 1] = 255
 		cv2.imwrite(dir_label_annotation + crop_image_name_annotation[:-15] + '-' + str(i + 1) + '-annotation.png', annot)
 		# perturb(images[i], annotations[i], i + 1, dir_name, filename_image, dir_label_annotation, crop_image_name_annotation)
 
