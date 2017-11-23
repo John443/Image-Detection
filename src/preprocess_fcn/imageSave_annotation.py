@@ -14,6 +14,8 @@ CANCER_COLOR = 1.0
 NO_CANCER_COLOR = 0.0
 if (TOTAL_SIZE - CENTER_SIZE) % 2 != 0:
 	ITEM_ADD = (TOTAL_SIZE - CENTER_SIZE + 1) / 2
+else:
+	ITEM_ADD = (TOTAL_SIZE - CENTER_SIZE) / 2
 
 
 def flood_fill(test_array, h_max=CANCER_COLOR):
