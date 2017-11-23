@@ -171,7 +171,7 @@ class Model(object):
 				with open(os.path.join(FLAGS.logs_dir, 'train_log.txt'), 'a') as f:
 					f.write("Step: %d, Train_loss: %g, ACC: %f" % (itr, train_loss, acc) + '\n')
 
-			if itr % 500:
+			if itr % 500 == 0:
 				# load validation dataset
 				eval_images, eval_annotations = eval_dataset.next_batch(FLAGS.batch_size)
 				eval_loss, eval_pred = self.eval_single_step(eval_images, eval_annotations)
