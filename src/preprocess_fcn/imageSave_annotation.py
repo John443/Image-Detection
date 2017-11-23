@@ -132,10 +132,10 @@ def preprocess(filename_svg, filename_image, dir_name, base_name):
 	image = cv2.warpAffine(image, M, (canvas_size, canvas_size))
 	# cv2.imwrite('image_moved.png',image)
 
-	# dir_name_label_1 = dir_name + '1' + '/'
+	dir_name_label_1 = dir_name + '1' + '/'
 	dir_name_label_0 = dir_name + '0' + '/'
 
-	# dir_annotation_1 = dir_name[:-1] + '_annotation/' + '1' + '/'
+	dir_annotation_1 = dir_name[:-1] + '_annotation/' + '1' + '/'
 	dir_annotation_0 = dir_name[:-1] + '_annotation/' + '0' + '/'
 
 	if not os.path.exists(dir_name):
@@ -157,12 +157,12 @@ def preprocess(filename_svg, filename_image, dir_name, base_name):
 		col_start_index = 0
 		while col_start_index + TOTAL_SIZE < canvas_size:
 			single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-			                  base_name, 1, sum_shelter, dir_name_label_0, dir_annotation_0)
+			                  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
 			col_start_index += STRIDE
 
 		col_start_index = canvas_size - TOTAL_SIZE
 		single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-		                  base_name, 1, sum_shelter, dir_name_label_0, dir_annotation_0)
+		                  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
 		row_start_index += STRIDE
 		row_number += 1
 
@@ -170,12 +170,12 @@ def preprocess(filename_svg, filename_image, dir_name, base_name):
 	col_start_index = 0
 	while col_start_index + TOTAL_SIZE < canvas_size:
 		single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-		                  base_name, 1, sum_shelter, dir_name_label_0, dir_annotation_0)
+		                  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
 		col_start_index += STRIDE
 
 	col_start_index = canvas_size - TOTAL_SIZE
 	single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-	                  base_name, 1, sum_shelter, dir_name_label_0, dir_annotation_0)
+	                  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
 	row_start_index += STRIDE
 
 	print(str(base_name) + "                done")
