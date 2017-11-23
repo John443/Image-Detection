@@ -70,8 +70,8 @@ class BatchDatset:
             label = tf.cast(features['label'], tf.int32)
 
             # Reshape image data into the original shape
-            image = tf.reshape(image, [FCN.IMAGE_SIZE, FCN.IMAGE_SIZE, 3])
-            annotation = tf.reshape(image, [FCN.IMAGE_SIZE * FCN.IMAGE_SIZE, ])
+            image = tf.reshape(image, [224, 224, 3])
+            annotation = tf.reshape(image, [224 * 224, ])
 
             # preprocess
             self.__channels = True

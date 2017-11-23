@@ -23,7 +23,7 @@ def _bytes_feature(value):
 
 def write_dataset(data_dir):
     image_list = create_image_lists(data_dir)
-    for k, record_list in image_list.iteritems():
+    for k, record_list in image_list.items():
         tf_filename = k + '.tfrecords'
         # open the TFRecords file
         writer = tf.python_io.TFRecordWriter(tf_filename)
@@ -37,7 +37,7 @@ def write_dataset(data_dir):
             # create a feature
             feature = {'image': _bytes_feature(tf.compat.as_bytes(image.tostring())),
                        'annotation': _bytes_feature(tf.compat.as_bytes(image.tostring())),
-                       'filename': _bytes_feature(filename),
+                       'filename': _bytes_feature(tf.compat.as_bytes((filename))),
                        'label': _int64_feature(label)}
 
             # create an example protocol buffer
@@ -55,9 +55,9 @@ def create_image_lists(image_dir):
         return None
     directories = ['training', 'validation']
     image_list = {}
-    file_glob_0 = os.path.join(image_dir, '15_15_128_image', '0', '*.' + 'png')
+    file_glob_0 = os.path.join(image_dir, 'img0', '*.' + 'png')
     file_glob_0_list = glob.glob(file_glob_0)
-    file_glob_1 = os.path.join(image_dir, '15_15_128_image', '1', '*.' + 'png')
+    file_glob_1 = os.path.join(image_dir, 'img1', '*.' + 'png')
     file_glob_1_list = glob.glob(file_glob_1)
 
     for directory in directories:
@@ -73,12 +73,12 @@ def create_image_lists(image_dir):
         # file_list.extend(glob.glob(file_glob))
         if directory == 'training':
             start = 0
-            end = -15000
+            end = 198
             # start = 0
             # end = 1000
         else:
-            start = -15000
-            end = -1
+            start = 0
+            end = 198
             # start = 1000
             # end = 2000
 
@@ -86,8 +86,10 @@ def create_image_lists(image_dir):
 
         for f in file_glob_0_list[start:end]:
 
-            filename = os.path.splitext(f.split("/")[-1])[0]
-            annotation_file = os.path.join(image_dir, '15_15_128_image_annotation', '0', filename + '-annotation.png')
+            #filename = os.path.splitext(f.split("/")[-1])[0]
+            filename, _ = os.path.splitext(f)
+            filename = os.path.basename(filename)
+            annotation_file = os.path.join(image_dir, 'im_annotation', '0', filename + '-annotation.png')
             if os.path.exists(annotation_file):
                 record = {'image': f, 'annotation': annotation_file, 'filename': filename, 'label': 0}
                 image_list[directory].append(record)
@@ -97,10 +99,11 @@ def create_image_lists(image_dir):
         # file_glob_1 = os.path.join(image_dir, 'raw-data',directory,'1','*.' + 'png')
 
         for f in file_glob_1_list[start:end]:
-            filename = os.path.splitext(f.split("/")[-1])[0]
-
+            #filename = os.path.splitext(f.split("/")[-1])[0]
+            filename, _ = os.path.splitext(f)
+            filename = os.path.basename(filename)
             # annotation_file = os.path.join(image_dir, "15_15_annotation_new", "1", filename + '-annotation.png')
-            annotation_file = os.path.join(image_dir, '15_15_128_image_annotation', '1', filename + '-annotation.png')
+            annotation_file = os.path.join(image_dir, 'im_annotation', '1', filename + '-annotation.png')
             if os.path.exists(annotation_file):
                 record = {'image': f, 'annotation': annotation_file, 'filename': filename, 'label': 1}
                 image_list[directory].append(record)
