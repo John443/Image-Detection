@@ -40,7 +40,6 @@ class BatchDatset:
 
 		print (self.images.shape)
 		print (self.annotations.shape)
-		print (self.labels)
 
 	def _transform(self, filename):
 		image = misc.imread(filename)
