@@ -5,12 +5,10 @@ import numpy as np
 import cv2
 import scipy.ndimage
 import os
-import random
-import tensorflow as tf
 
 
 CENTER_SIZE = 128
-TOTAL_SIZE = 224
+TOTAL_SIZE = 128
 STRIDE = CENTER_SIZE - 1
 CANCER_COLOR = 1.0
 NO_CANCER_COLOR = 0.0
@@ -90,7 +88,7 @@ def augmentation(crop_image, dir_name, filename_image, crop_image_annotation, cr
 	for i in range(len(images)):
 		cv2.imwrite(dir_name + filename_image[:-4] + '-' + str(i + 1) + '.png', images[i])
 		annot = annotations[i].copy()
-		annot[annot == 1] = 255
+		# annot[annot == 1] = 255
 		cv2.imwrite(dir_label_annotation + crop_image_name_annotation[:-15] + '-' + str(i + 1) + '-annotation.png', annot)
 
 
@@ -134,10 +132,10 @@ def preprocess(filename_svg, filename_image, dir_name, base_name):
 	image = cv2.warpAffine(image, M, (canvas_size, canvas_size))
 	# cv2.imwrite('image_moved.png',image)
 
-	dir_name_label_1 = dir_name + '1' + '/'
+	# dir_name_label_1 = dir_name + '1' + '/'
 	dir_name_label_0 = dir_name + '0' + '/'
 
-	dir_annotation_1 = dir_name[:-1] + '_annotation/' + '1' + '/'
+	# dir_annotation_1 = dir_name[:-1] + '_annotation/' + '1' + '/'
 	dir_annotation_0 = dir_name[:-1] + '_annotation/' + '0' + '/'
 
 	if not os.path.exists(dir_name):
@@ -146,10 +144,10 @@ def preprocess(filename_svg, filename_image, dir_name, base_name):
 		os.mkdir(dir_name[:-1] + '_annotation/')
 	if not os.path.exists(dir_name_label_0):
 		os.mkdir(dir_name_label_0)
-	if not os.path.exists(dir_name_label_1):
-		os.mkdir(dir_name_label_1)
-	if not os.path.exists(dir_annotation_1):
-		os.mkdir(dir_annotation_1)
+	# if not os.path.exists(dir_name_label_1):
+	# 	os.mkdir(dir_name_label_1)
+	# if not os.path.exists(dir_annotation_1):
+	# 	os.mkdir(dir_annotation_1)
 	if not os.path.exists(dir_annotation_0):
 		os.mkdir(dir_annotation_0)
 
@@ -159,12 +157,12 @@ def preprocess(filename_svg, filename_image, dir_name, base_name):
 		col_start_index = 0
 		while col_start_index + TOTAL_SIZE < canvas_size:
 			single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-			                  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
+			                  base_name, 1, sum_shelter, dir_name_label_0, dir_annotation_0)
 			col_start_index += STRIDE
 
 		col_start_index = canvas_size - TOTAL_SIZE
 		single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-		                  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
+		                  base_name, 1, sum_shelter, dir_name_label_0, dir_annotation_0)
 		row_start_index += STRIDE
 		row_number += 1
 
@@ -172,12 +170,12 @@ def preprocess(filename_svg, filename_image, dir_name, base_name):
 	col_start_index = 0
 	while col_start_index + TOTAL_SIZE < canvas_size:
 		single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-		                  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
+		                  base_name, 1, sum_shelter, dir_name_label_0, dir_annotation_0)
 		col_start_index += STRIDE
 
 	col_start_index = canvas_size - TOTAL_SIZE
 	single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_label_0, dir_annotation_0,
-	                  base_name, 1, sum_shelter, dir_name_label_1, dir_annotation_1)
+	                  base_name, 1, sum_shelter, dir_name_label_0, dir_annotation_0)
 	row_start_index += STRIDE
 
 	print(str(base_name) + "                done")
@@ -199,8 +197,8 @@ def single_crop_image(image, row_start_index, col_start_index, canvas, dir_name_
 	else:
 		if np.sum(canvas[(row_start_index + ITEM_ADD):(row_start_index + ITEM_ADD + CENTER_SIZE),
 		          (col_start_index + ITEM_ADD):(col_start_index + ITEM_ADD + CENTER_SIZE)]) > sum_shelter:
-			dir_name_label = dir_name_label_1
-			dir_label_annotation = dir_annotation_1
+			dir_name_label = dir_name_label_0
+			dir_label_annotation = dir_annotation_0
 			img_type = 1
 		else:
 			dir_name_label = dir_name_label_0
