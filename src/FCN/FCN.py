@@ -207,23 +207,23 @@ def train(loss, var_list):
 def main(argv=None):
 	keep_probability = tf.placeholder(tf.float32, name="keep_probabilty")
 	image = tf.placeholder(tf.float32, shape=[None, IMAGE_SIZE, IMAGE_SIZE, 3], name="input_image")
-	annotation = tf.placeholder(tf.float32, shape=[None, IMAGE_SIZE, IMAGE_SIZE, 1], name="annotation")
+	annotation = tf.placeholder(tf.int32, shape=[None, IMAGE_SIZE, IMAGE_SIZE, 1], name="annotation")
 
 	pred_annotation, logits = inference(image, keep_probability)
 	tf.summary.image("input_image", image, max_outputs=2)
 	tf.summary.image("ground_truth", tf.cast(annotation, tf.uint8), max_outputs=2)
 	tf.summary.image("pred_annotation", tf.cast(pred_annotation, tf.uint8), max_outputs=2)
 
-	# loss = tf.reduce_mean((tf.nn.sparse_softmax_cross_entropy_with_logits(
-	# 	logits=logits,
-	# 	labels=tf.squeeze(annotation, squeeze_dims=[3]),
-	# 	name="entropy"
-	# )))
-	loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
-		logits=tf.cast(tf.reshape(logits, (-1, NUM_OF_CLASSESS)), tf.float32),
-		labels=tf.reshape(annotation, (-1, NUM_OF_CLASSESS)),
-		name='entropy'
-	))
+	loss = tf.reduce_mean((tf.nn.sparse_softmax_cross_entropy_with_logits(
+		logits=logits,
+		labels=tf.squeeze(annotation, squeeze_dims=[3]),
+		name="entropy"
+	)))
+	# loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
+	# 	logits=tf.cast(tf.reshape(logits, (-1, NUM_OF_CLASSESS)), tf.float32),
+	# 	labels=tf.reshape(annotation, (-1, NUM_OF_CLASSESS)),
+	# 	name='entropy'
+	# ))
 	tf.summary.scalar("entropy", loss)
 
 	trainable_var = tf.trainable_variables()
