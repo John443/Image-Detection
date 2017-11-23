@@ -197,10 +197,9 @@ def inference(image, keep_prob):
 def train(loss_val, var_list):
 	optimizer = tf.train.AdamOptimizer(FLAGS.learning_rate)
 	grads = optimizer.compute_gradients(loss_val, var_list=var_list)
-	if FLAGS.debug:
-		# print(len(var_list))
-		for grad, var in grads:
-			utils.add_gradient_summary(grad, var)
+	# if FLAGS.debug:
+	# 	for grad, var in grads:
+	# 		utils.add_gradient_summary(grad, var)
 	return optimizer.apply_gradients(grads)
 
 
@@ -229,9 +228,9 @@ def main(argv=None):
 	loss, logits, pred_annotation = loss_op(image, annotation, keep_probability)
 
 	trainable_var = tf.trainable_variables()
-	if FLAGS.debug:
-		for var in trainable_var:
-			utils.add_to_regularization_and_summary(var)
+	# if FLAGS.debug:
+	# 	for var in trainable_var:
+	# 		utils.add_to_regularization_and_summary(var)
 	train_op = train(loss, trainable_var)
 
 	print("Setting up summary op...")
