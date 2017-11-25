@@ -170,43 +170,34 @@ class Model(object):
 			if itr % 10 == 0:
 				# acc = self._accuracy(annotations, prediction)
 
-				print("Step: %d, Train_loss: %g" % (itr, train_loss))
-				with open(os.path.join(FLAGS.logs_dir, 'train_log.txt'), 'w') as f:
-					f.write("Step: %d, Train_loss: %g" % (itr, train_loss) + '\n')
+				print("%s ---> Step: %d, Train_loss: %g" % (datetime.datetime.now(), itr, train_loss))
+				with open(os.path.join(FLAGS.logs_dir, 'train_log.txt'), 'a') as f:
+					f.write("%s ---> Step: %d, Train_loss: %g" % (datetime.datetime.now(), itr, train_loss) + '\n')
 				summary_writer.add_summary(summary_str, itr)
 
-			if itr % 500 == 0:
+			if itr % 100 == 0 and itr != 0:
 				# load validation dataset
 				eval_images, eval_annotations = eval_dataset.next_batch(FLAGS.batch_size)
 				eval_loss, eval_pred = self.eval_single_step(eval_images, eval_annotations)
 
 				# acc = self._accuracy(eval_annotations, eval_pred)
 				with open(os.path.join(FLAGS.logs_dir, 'train_log.txt'), 'a') as f:
-					f.write(
-						"%s ---> Validation_loss: %g" % (datetime.datetime.now(), eval_loss) + '\n')
-				print("%s ---> Validation_loss: %g" % (datetime.datetime.now(), eval_loss))
+					f.write("%s --->  Step: %d, Validation_loss: %g" % (datetime.datetime.now(), itr, eval_loss) + '\n')
+				print("%s --->  Step: %d, Validation_loss: %g" % (datetime.datetime.now(), itr, eval_loss))
 				self.saver.save(self.sess, FLAGS.logs_dir + "model.ckpt", itr)
 
-	def eval(self, dataset):
-		if FLAGS.subset == "train":
-			train_data_reader = None
-		elif FLAGS.subset == "validation":
-			eval_data_reader = None
-
+	def eval(self, train_dataset, eval_dataset):
 		num_iter = int(math.ceil(float(FLAGS.data_number) / FLAGS.batch_size))
-
-		total_sum_annotation = 0
-		total_sum_pred_annotation = 0
 
 		for number in range(num_iter):
 			if FLAGS.subset == "train":
-				images_to_check, annotation_to_check = train_data_reader
+				images_to_check, annotation_to_check = train_dataset.next_batch(FLAGS.batch_size)
 			elif FLAGS.subset == "validation":
-				images_to_check, annotation_to_check = eval_data_reader
+				images_to_check, annotation_to_check = eval_dataset.get_random_batch(FLAGS.batch_size)
 
 			_, eval_pred = self.eval_single_step(images_to_check, annotation_to_check)
 
-			acc = self._accuracy(annotation_to_check, eval_pred)
+			# acc = self._accuracy(annotation_to_check, eval_pred)
 
 			if number >= 0:
 				for itr in range(FLAGS.batch_size):
@@ -238,7 +229,10 @@ def main(_):
 	eval_dataset_reader = dataset.BatchDatset(valid_records, image_options)
 
 	model = Model()
-	model.train(train_dataset_reader, eval_dataset_reader)
+	if FLAGS.mode == 'train':
+		model.train(train_dataset_reader, eval_dataset_reader)
+	elif FLAGS.mode == 'validation':
+		model.eval(train_dataset_reader, eval_dataset_reader)
 
 
 if __name__ == '__main__':
