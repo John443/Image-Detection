@@ -7,8 +7,8 @@ import math
 import TensorflowUtils as utils
 import read_MITSceneParsingData as scene_parsing
 import datetime
-import BatchDatsetReader as dataset
-from six.moves import xrange
+# import BatchDatsetReader as dataset
+import DatsetReader as dataset
 import tensorflow.contrib.slim as slim
 
 FLAGS = tf.flags.FLAGS
