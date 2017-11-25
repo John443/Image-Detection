@@ -66,8 +66,8 @@ class BatchDatset:
 		self.batch_offset += batch_size
 		if self.batch_offset > self.files.shape[0]:
 			# Finished epoch
-			print("****************** Epochs completed: " + str(self.epochs_completed) + "******************")
 			self.epochs_completed += 1
+			print("****************** Epochs completed: " + str(self.epochs_completed) + "******************")
 			# Shuffle the data
 			np.random.shuffle(self.files)
 			# Start next epoch
@@ -83,8 +83,8 @@ class BatchDatset:
 		self.batch_offset += batch_size
 		if self.batch_offset > self.files.shape[0]:
 			# Finished epoch
-			print("****************** Epochs completed: " + str(self.epochs_completed) + "******************")
 			self.epochs_completed += 1
+			print("****************** Epochs completed: " + str(self.epochs_completed) + "******************")
 			# Shuffle the data
 			np.random.shuffle(self.files)
 			# Start next epoch

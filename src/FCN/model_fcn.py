@@ -119,15 +119,15 @@ class Model(object):
 		return
 
 	def run_single_step(self, image, annotations):
-		_, train_loss, prediction, logits = self.sess.run(
-			[self.train_op, self.loss, self.anno_pred, self.logits],
+		_, train_loss, prediction, logits, summary_str = self.sess.run(
+			[self.train_op, self.loss, self.anno_pred, self.logits, self.summary_op],
 			feed_dict={
 				self.input: image,
 				self.annotation: annotations,
 				self.keep_probability: 0.85
 			}
 		)
-		return train_loss, prediction, logits
+		return train_loss, prediction, logits, summary_str
 
 	def eval_single_step(self, image, annotations):
 		eval_loss, eval_pred = self.sess.run(
@@ -159,28 +159,32 @@ class Model(object):
 		return acc
 
 	def train(self, train_dataset, eval_dataset):
+		tf.summary.scalar('loss', self.loss)
+		self.summary_op = tf.summary.merge_all()
+		summary_writer = tf.summary.FileWriter(FLAGS.logs_dir, self.sess.graph)
 		for itr in range(MAX_ITERATION):
 			# input images by batch
 			image, annotations = train_dataset.next_batch(FLAGS.batch_size)
-			train_loss, prediction, logits = self.run_single_step(image, annotations)
+			train_loss, prediction, logits, summary_str = self.run_single_step(image, annotations)
 
 			if itr % 10 == 0:
-				acc = self._accuracy(annotations, prediction)
+				# acc = self._accuracy(annotations, prediction)
 
-				print("Step: %d, Train_loss: %g, ACC: %f" % (itr, train_loss, acc))
-				with open(os.path.join(FLAGS.logs_dir, 'train_log.txt'), 'a') as f:
-					f.write("Step: %d, Train_loss: %g, ACC: %f" % (itr, train_loss, acc) + '\n')
+				print("Step: %d, Train_loss: %g" % (itr, train_loss))
+				with open(os.path.join(FLAGS.logs_dir, 'train_log.txt'), 'w') as f:
+					f.write("Step: %d, Train_loss: %g" % (itr, train_loss) + '\n')
+				summary_writer.add_summary(summary_str, itr)
 
 			if itr % 500 == 0:
 				# load validation dataset
 				eval_images, eval_annotations = eval_dataset.next_batch(FLAGS.batch_size)
 				eval_loss, eval_pred = self.eval_single_step(eval_images, eval_annotations)
 
-				acc = self._accuracy(eval_annotations, eval_pred)
+				# acc = self._accuracy(eval_annotations, eval_pred)
 				with open(os.path.join(FLAGS.logs_dir, 'train_log.txt'), 'a') as f:
 					f.write(
-						"%s ---> Validation_loss: %g     acc: %f" % (datetime.datetime.now(), eval_loss, acc) + '\n')
-				print("%s ---> Validation_loss: %g     acc: %f" % (datetime.datetime.now(), eval_loss, acc))
+						"%s ---> Validation_loss: %g" % (datetime.datetime.now(), eval_loss) + '\n')
+				print("%s ---> Validation_loss: %g" % (datetime.datetime.now(), eval_loss))
 				self.saver.save(self.sess, FLAGS.logs_dir + "model.ckpt", itr)
 
 	def eval(self, dataset):
