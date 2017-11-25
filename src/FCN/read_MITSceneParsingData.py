@@ -7,9 +7,6 @@ import glob
 
 import TensorflowUtils as utils
 
-# DATA_URL = 'http://sceneparsing.csail.mit.edu/data/ADEChallengeData2016.zip'
-# DATA_URL = 'http://data.csail.mit.edu/places/ADEchallenge/ADEChallengeData2016.zip'
-
 
 def read_dataset(data_dir):
 	pickle_filename = "vgg_model_test.pickle"
@@ -46,21 +43,14 @@ def create_image_lists(image_dir):
 	for directory in directories:
 		file_list = []
 		image_list[directory] = []
-		# file_glob = os.path.join(image_dir, "images", directory, '*.' + 'jpg')
 
-		# print file_glob_0
-		# print file_glob_0_list
-		# file_list.extend(glob.glob(file_glob_0))
-		# file_glob_1 = os.path.join(image_dir, directory,'1','*.' + 'png')
-		# file_list.extend(glob.glob(file_glob_1))
-		# file_list.extend(glob.glob(file_glob))
 		if directory == 'training':
 			start = 0
-			end = -30000
+			end = -200
 			# start = 0
 			# end = 1000
 		else:
-			start = -30000
+			start = -200
 			end = -1
 			# start = 1000
 			# end = 2000
