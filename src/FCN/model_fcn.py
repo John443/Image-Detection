@@ -140,19 +140,26 @@ class Model(object):
 		)
 		return eval_loss, eval_pred
 
-	def _accuracy(self, annotations, prediction):
-		annotations = np.squeeze(annotations, axis=3)
-		prediction = np.squeeze(prediction, axis=3)
+	def _accuracy(self, annotations, predictions):
+		# annotations = np.squeeze(annotations, axis=3)
+		# predictions = np.squeeze(prediction, axis=3)
 		sum_annotation = 0
 		sum_pred_annotation = 0
-		for index in range(FLAGS.batch_size):
-			sum_annotation += np.sum(annotations[index])
-
-			rows, cols = np.shape(prediction[index])
-			for i in range(rows):
-				for j in range(cols):
-					if prediction[index][i, j] == 1 and annotations[index][i, j] == 1:
-						sum_pred_annotation += 1
+		for i in range(FLAGS.batch_size):
+			# sum_annotation += np.sum(annotations[index])
+			#
+			# rows, cols = np.shape(prediction[index])
+			# for i in range(rows):
+			# 	for j in range(cols):
+			# 		if prediction[index][i, j] == 1 and annotations[index][i, j] == 1:
+			# 			sum_pred_annotation += 1
+			annotation = np.reshape(annotations[i], (1, IMAGE_SIZE * IMAGE_SIZE))
+			prediction = np.reshape(predictions[i], (1, IMAGE_SIZE * IMAGE_SIZE))
+			annotation[annotation > 0] = 1
+			prediction[prediction > 0] = 1
+			sum_annotation += np.sum(annotation)
+			if prediction[i] == 1 and annotation[i] == 1:
+				sum_pred_annotation += 1
 
 		acc = float(sum_pred_annotation) / sum_annotation
 
@@ -180,10 +187,10 @@ class Model(object):
 				eval_images, eval_annotations = eval_dataset.next_batch(FLAGS.batch_size)
 				eval_loss, eval_pred = self.eval_single_step(eval_images, eval_annotations)
 
-				# acc = self._accuracy(eval_annotations, eval_pred)
+				acc = self._accuracy(eval_annotations, eval_pred)
 				with open(os.path.join(FLAGS.logs_dir, 'train_log.txt'), 'a') as f:
 					f.write("%s --->  Step: %d, Validation_loss: %g" % (datetime.datetime.now(), itr, eval_loss) + '\n')
-				print("%s --->  Step: %d, Validation_loss: %g" % (datetime.datetime.now(), itr, eval_loss))
+				print("%s --->  Step: %d, Validation_loss: %g, Accuracy: %g" % (datetime.datetime.now(), itr, eval_loss, acc))
 				self.saver.save(self.sess, FLAGS.logs_dir + "model.ckpt", itr)
 
 	def eval(self, train_dataset, eval_dataset):
