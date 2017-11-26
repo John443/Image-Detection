@@ -190,7 +190,7 @@ class Model(object):
 
 				acc = self._accuracy(eval_annotations, eval_pred)
 				with open(os.path.join(FLAGS.logs_dir, 'train_log.txt'), 'a') as f:
-					f.write("%s --->  Step: %d, Validation_loss: %g" % (datetime.datetime.now(), itr, eval_loss) + '\n')
+					f.write("%s --->  Step: %d, Validation_loss: %g, Accuracy: %g" % (datetime.datetime.now(), itr, eval_loss, acc) + '\n')
 				print("%s --->  Step: %d, Validation_loss: %g, Accuracy: %g" % (datetime.datetime.now(), itr, eval_loss, acc))
 				self.saver.save(self.sess, FLAGS.logs_dir + "model.ckpt", itr)
 
@@ -203,9 +203,10 @@ class Model(object):
 			elif FLAGS.subset == "validation":
 				images_to_check, annotation_to_check = eval_dataset.get_random_batch(FLAGS.batch_size)
 
-			_, eval_pred = self.eval_single_step(images_to_check, annotation_to_check)
+			eval_loss, eval_pred = self.eval_single_step(images_to_check, annotation_to_check)
 
-			# acc = self._accuracy(annotation_to_check, eval_pred)
+			acc = self._accuracy(annotation_to_check, eval_pred)
+			print("%s --->  Number: %d, Validation_loss: %g, Accuracy: %g" % (datetime.datetime.now(), number, eval_loss, acc))
 
 			if number >= 0:
 				for itr in range(FLAGS.batch_size):
@@ -224,7 +225,7 @@ class Model(object):
 						FLAGS.logs_dir,
 						name="pred_" + str(number)
 					)
-					print("Saved image: %d" % number)
+				print("Saved image: %d" % number)
 
 
 def main(_):
