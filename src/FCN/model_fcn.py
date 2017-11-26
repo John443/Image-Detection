@@ -210,11 +210,11 @@ class Model(object):
 
 			if number >= 0:
 				for itr in range(FLAGS.batch_size):
-					utils.save_image(
-						images_to_check[itr].astype(np.uint8),
-						FLAGS.logs_dir,
-						name="inp_" + str(number)
-					)
+					# utils.save_image(
+					# 	images_to_check[itr].astype(np.uint8),
+					# 	FLAGS.logs_dir,
+					# 	name="inp_" + str(number)
+					# )
 					annotation = annotation_to_check[itr].astype(np.uint8)
 					annotation[annotation == 1] = 255
 					utils.save_image(
