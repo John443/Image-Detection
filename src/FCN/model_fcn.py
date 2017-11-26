@@ -210,13 +210,14 @@ class Model(object):
 
 			if number >= 0:
 				for itr in range(FLAGS.batch_size):
-					# utils.save_image(
-					# 	images_to_check[itr].astype(np.uint8),
-					# 	FLAGS.logs_dir,
-					# 	name="inp_" + str(number)
-					# )
+					utils.save_image(
+						images_to_check[itr].astype(np.uint8),
+						FLAGS.logs_dir,
+						name="inp_" + str(number)
+					)
 					annotation = annotation_to_check[itr].astype(np.uint8)
 					annotation[annotation == 1] = 255
+					annotation = np.reshape(annotation, (IMAGE_SIZE, IMAGE_SIZE))
 					utils.save_image(
 						annotation,
 						FLAGS.logs_dir,
@@ -224,6 +225,7 @@ class Model(object):
 					)
 					eval_pr = eval_pred[itr].astype(np.uint8)
 					eval_pr[eval_pr == 1] = 255
+					eval_pr = np.reshape(eval_pr, (IMAGE_SIZE, IMAGE_SIZE))
 					utils.save_image(
 						eval_pr,
 						FLAGS.logs_dir,
