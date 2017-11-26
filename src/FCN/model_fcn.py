@@ -157,7 +157,7 @@ class Model(object):
 			prediction = np.reshape(predictions[i], (1, IMAGE_SIZE * IMAGE_SIZE))
 			annotation[annotation > 0] = 1
 			prediction[prediction > 0] = 1
-			sum_annotation += np.sum(annotation)
+			sum_annotation += np.sum(annotation[0])
 			if prediction[0][i] == 1 and annotation[0][i] == 1:
 				sum_pred_annotation += 1
 
