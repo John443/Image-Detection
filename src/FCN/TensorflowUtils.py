@@ -54,7 +54,7 @@ def save_image(image, save_dir, name, mean=None):
 	"""
 	if mean:
 		image = unprocess_image(image, mean)
-	misc.imsave(os.path.join(save_dir, name + ".png"), image)
+	misc.imsave(image, os.path.join(save_dir, name + ".png"))
 
 
 def get_variable(weights, name):
