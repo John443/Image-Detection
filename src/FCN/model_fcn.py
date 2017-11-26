@@ -158,8 +158,9 @@ class Model(object):
 			annotation[annotation > 0] = 1
 			prediction[prediction > 0] = 1
 			sum_annotation += np.sum(annotation[0])
-			if prediction[0][i] == 1 and annotation[0][i] == 1:
-				sum_pred_annotation += 1
+			for j in range(IMAGE_SIZE * IMAGE_SIZE):
+				if prediction[0][j] == 1 and annotation[0][j] == 1:
+					sum_pred_annotation += 1
 
 		acc = float(sum_pred_annotation) / sum_annotation
 
