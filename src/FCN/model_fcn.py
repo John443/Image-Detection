@@ -216,12 +216,12 @@ class Model(object):
 						name="inp_" + str(number)
 					)
 					utils.save_image(
-						annotation_to_check[itr].astype(np.uint8) * 255.0,
+						annotation_to_check[itr].astype(np.uint8) * 255,
 						FLAGS.logs_dir,
 						name="gt_" + str(number)
 					)
 					utils.save_image(
-						eval_pred[itr].astype(np.uint8) * 255.0,
+						eval_pred[itr].astype(np.uint8) * 255,
 						FLAGS.logs_dir,
 						name="pred_" + str(number)
 					)
