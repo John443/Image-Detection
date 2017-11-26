@@ -103,9 +103,9 @@ class BatchDatset:
 			[np.expand_dims(self._transform(filename['annotation']), axis=3) for filename in self.files[cnds]])
 		self.labels = np.array([filename['label'] for filename in self.files[cnds]])
 
-		print (self.images.shape)
-		print (self.annotations.shape)
-		print (self.labels)
+		# print (self.images.shape)
+		# print (self.annotations.shape)
+		# print (self.labels)
 		
 	def get_random_batch(self, batch_size):
 		indexes = np.random.randint(0, self.files.shape[0], size=[batch_size]).tolist()

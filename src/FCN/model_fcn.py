@@ -215,13 +215,17 @@ class Model(object):
 						FLAGS.logs_dir,
 						name="inp_" + str(number)
 					)
+					annotation = annotation_to_check[itr].astype(np.uint8)
+					annotation[annotation == 1] = 255
 					utils.save_image(
-						annotation_to_check[itr].astype(np.uint8) * 255,
+						annotation,
 						FLAGS.logs_dir,
 						name="gt_" + str(number)
 					)
+					eval_pr = eval_pred[itr].astype(np.uint8)
+					eval_pr[eval_pr == 1] = 255
 					utils.save_image(
-						eval_pred[itr].astype(np.uint8) * 255,
+						eval_pr,
 						FLAGS.logs_dir,
 						name="pred_" + str(number)
 					)
